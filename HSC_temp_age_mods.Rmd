@@ -1,0 +1,115 @@
+---
+title: "HSC_temp_age_models.Rmd"
+output: html_document
+---
+
+```{r read in data sets}
+HSC_age_dens <- read.csv("./data/HSC_age_dens.csv")
+
+HSC_morph_hr <- read.csv("./data/HSC_morph_hr.csv")
+```
+
+```{r temperature and amebocyte density}
+boxplot(ameb_d~temp, data = HSC_age_dens, xlab = "Temperature", ylab = "Amebocyte Density")
+
+ameb_temp_mod <- lm(ameb_d~temp, data = HSC_age_dens)
+summary(ameb_temp_mod)
+anova(ameb_temp_mod)
+
+
+library(dplyr)
+high = filter(HSC_age_dens, temp == "30")
+low = filter(HSC_age_dens, temp == "20")
+mean_high = mean(high$ameb_d)
+mean_low = mean(low$ameb_d)
+
+mean_high - mean_low # delta value
+
+sigma_ameb_d_temp <- sd(HSC_age_dens$ameb_d)
+
+# does ameb density differ between young and old crabs? power analysis to determine how many crabs needed to answer question
+
+pow_temp_dens <- power.t.test(n= , delta = 200069, sd = sigma_ameb_d_temp, power = 0.5,
+                             sig.level =  0.05)
+pow_temp_dens
+# gives n = 25.5... number of hscs required for each group; can run different powers to see different numbers
+
+# use anova power test to specify 2 groups and leave sample size blank
+```
+
+```{r age and amebocyte density}
+boxplot(ameb_d~age, data = HSC_age_dens, xlab = "Amebocyte Density", ylab = "Age")
+
+ameb_age_mod <- lm(ameb_d~age, data = HSC_age_dens)
+summary(ameb_age_mod)
+anova(ameb_age_mod)
+
+library(dplyr)
+old = filter(HSC_age_dens, age == "O")
+young = filter(HSC_age_dens, age == "Y")
+mean_old = mean(old$ameb_d)
+mean_young = mean(young$ameb_d)
+
+mean_old - mean_young
+# calculation for determining delta value
+
+sigma_ameb_d <- sd(HSC_age_dens$ameb_d)
+
+
+# does ameb density differ between young and old crabs? power analysis to determine how many crabs needed to answer question
+
+pow_age_dens <- power.t.test(n= , delta = 500000, sd = sigma_ameb_d, power = 0.5,
+                             sig.level =  0.05)
+pow_age_dens
+# gives n = 25.5... number of hscs required for each group; can run different powers to see different numbers
+```
+
+```{r temperature and amebocyte morphology}
+boxplot(morph_p ~ morph_c + temp, data = HSC_morph_hr, ylab = "Percent Morphology")
+
+age_temp_mod <- lm(morph_p ~ morph_c + temp, data = HSC_morph_hr)
+age_temp_mod_int <- update(age_temp_mod, . ~ . + morph_c:temp)
+summary(age_temp_mod)
+anova(age_temp_mod)
+car::Anova(age_temp_mod, type = 3)
+anova(age_temp_mod, age_temp_mod_int)
+
+```
+
+```{r age and amebocyte morphology}
+boxplot(morph_p ~ morph_c + age, data = HSC_morph_hr, ylab = "Percent Morphology")
+
+age_morph_mod <- lm(morph_p ~ morph_c + age, data = HSC_morph_hr)
+summary(age_morph_mod)
+anova(age_morph_mod)
+
+library(dplyr)
+
+# age
+old_1 <- filter(HSC_morph_hr, age == "O")
+young_1 <- filter(HSC_morph_hr, age == "Y")
+
+# amebocyte morphology
+contracted <- filter(HSC_morph_hr, morph_c == "C")
+degran <- filter(HSC_morph_hr, morph_c == "DGF")
+gran <- filter(HSC_morph_hr, morph_c == "GF")
+
+df_con <- c(contracted)
+
+```
+
+```{r age and heart rate}
+boxplot(hr ~ hr_c + age, data = HSC_morph_hr, ylab = "Heart Rate Condtion")
+
+age_hr_mod <- lm(hr ~ hr_c + age, data = HSC_morph_hr)
+summary(age_hr_mod)
+anova(age_hr_mod)
+```
+
+```{r temperature and heart rate}
+boxplot(hr ~ hr_c + temp, data = HSC_morph_hr, xlab = "Heart Rate Condtion")
+
+age_temp_mod <- lm(hr ~ hr_c + temp, data = HSC_morph_hr)
+summary(age_temp_mod)
+anova(age_temp_mod)
+```
