@@ -4,18 +4,21 @@ output: html_document
 ---
 
 ```{r read in data sets}
+# relevant data sets for this document
 HSC_age_dens <- read.csv("./data/HSC_age_dens.csv")
-
 HSC_morph_hr <- read.csv("./data/HSC_morph_hr.csv")
+
+# libraries used
+library(dplyr)
 ```
 
 ```{r temperature and amebocyte density}
-boxplot(ameb_d~temp, data = HSC_age_dens, xlab = "Temperature", ylab = "Amebocyte Density")
+boxplot(ameb_d~temp, data = HSC_age_dens, xlab = "Temperature (°C)", ylab = "Amebocyte Density (g/mL)")
+# created box plot looking at the effect of temperature on amebocyte density
 
 ameb_temp_mod <- lm(ameb_d~temp, data = HSC_age_dens)
 summary(ameb_temp_mod)
 anova(ameb_temp_mod)
-
 
 library(dplyr)
 high = filter(HSC_age_dens, temp == "30")
@@ -29,7 +32,7 @@ sigma_ameb_d_temp <- sd(HSC_age_dens$ameb_d)
 
 # does ameb density differ between young and old crabs? power analysis to determine how many crabs needed to answer question
 
-pow_temp_dens <- power.t.test(n= , delta = 200069, sd = sigma_ameb_d_temp, power = 0.5,
+pow_temp_dens <- power.t.test(n= , delta = 200069, sd = sigma_ameb_d_temp, power =0.5,
                              sig.level =  0.05)
 pow_temp_dens
 # gives n = 25.5... number of hscs required for each group; can run different powers to see different numbers
@@ -37,8 +40,24 @@ pow_temp_dens
 # use anova power test to specify 2 groups and leave sample size blank
 ```
 
+```{r}
+# looking to make function/plot to ana
+sig_df <- c(0.5, 0.75, 0.9) # different powers that i would like to analyze
+# goal: make graph that evaluates number of samples needed at different power levels
+
+power_ameb_dens <- function(n, sig_df= c(0.5, 0.75, 0.9)){
+  hsc_samp_size <- NULL
+  for(i in  seq_along(sig_df)) {
+     hsc_samp_size[i] <- power.t.test(n=n , delta = 200069, sd = sigma_ameb_d_temp, 
+                                  power=0.5, sig.level =  sig_df[i])$n
+  }
+  hsc_samp_size
+}
+
+```
+
 ```{r age and amebocyte density}
-boxplot(ameb_d~age, data = HSC_age_dens, xlab = "Amebocyte Density", ylab = "Age")
+boxplot(ameb_d~age, data = HSC_age_dens, xlab = "HSC Age", ylab = "Amebocyte Density (g/mL)")
 
 ameb_age_mod <- lm(ameb_d~age, data = HSC_age_dens)
 summary(ameb_age_mod)
@@ -65,8 +84,11 @@ pow_age_dens
 ```
 
 ```{r temperature and amebocyte morphology}
-boxplot(morph_p ~ morph_c + temp, data = HSC_morph_hr, ylab = "Percent Morphology")
-
+boxplot(morph_p ~ morph_c + temp, data = HSC_morph_hr,
+        xlab = "Morphology Condition and Temperature(°C)",
+        ylab = "Percent Morphology (%)", axes = FALSE)
+axis(side = 1, at = 1:6, labels = letters[1:6])
+axis(side = 2)
 age_temp_mod <- lm(morph_p ~ morph_c + temp, data = HSC_morph_hr)
 age_temp_mod_int <- update(age_temp_mod, . ~ . + morph_c:temp)
 summary(age_temp_mod)
@@ -74,6 +96,28 @@ anova(age_temp_mod)
 car::Anova(age_temp_mod, type = 3)
 anova(age_temp_mod, age_temp_mod_int)
 
+# Average percent morphology for each condition: temperature and morpholgy
+# subsets information and finds means for power analysis
+
+high_con = filter(HSC_morph_hr, temp == "30", morph_c == "C")
+mean_high_con = mean(high_con$morph_p)
+
+low_con = filter(HSC_morph_hr, temp == "20", morph_c == "C")
+mean_low_con = mean(low_con$morph_p)
+
+high_gf = filter(HSC_morph_hr, temp == "30", morph_c == "GF")
+mean_high_gf = mean(high_gf$morph_p)
+
+low_gf = filter(HSC_morph_hr, temp == "20", morph_c == "GF")
+mean_low_gf = mean(low_gf$morph_p)
+
+high_dgf = filter(HSC_morph_hr, temp == "30", morph_c == "DGF")
+mean_high_dgf = mean(high_dgf$morph_p)
+
+low_dgf = filter(HSC_morph_hr, temp == "20", morph_c == "DGF")
+mean_low_dgf = mean(low_dgf$morph_p)
+
+?power.anova.test
 ```
 
 ```{r age and amebocyte morphology}
@@ -89,12 +133,25 @@ library(dplyr)
 old_1 <- filter(HSC_morph_hr, age == "O")
 young_1 <- filter(HSC_morph_hr, age == "Y")
 
-# amebocyte morphology
-contracted <- filter(HSC_morph_hr, morph_c == "C")
-degran <- filter(HSC_morph_hr, morph_c == "DGF")
-gran <- filter(HSC_morph_hr, morph_c == "GF")
+# amebocyte morphology and age subsets and averages for calculating power analysis
 
-df_con <- c(contracted)
+old_con = filter(HSC_morph_hr, age == "O", morph_c == "C")
+mean_old_con = mean(old_con$morph_p)
+
+young_con = filter(HSC_morph_hr, age == "Y", morph_c == "C")
+mean_young_con = mean(young_con$morph_p)
+
+old_gf = filter(HSC_morph_hr, age == "O", morph_c == "GF")
+mean_old_gf = mean(old_gf$morph_p)
+
+young_gf = filter(HSC_morph_hr, age == "Y", morph_c == "GF")
+mean_young_gf = mean(young_gf$morph_p)
+
+old_dgf = filter(HSC_morph_hr, age == "O", morph_c == "DGF")
+mean_old_dgf = mean(old_dgf$morph_p)
+
+young_dgf = filter(HSC_morph_hr, age == "Y", morph_c == "DGF")
+mean_young_dgf = mean(young_dgf$morph_p)
 
 ```
 
@@ -107,7 +164,7 @@ anova(age_hr_mod)
 ```
 
 ```{r temperature and heart rate}
-boxplot(hr ~ hr_c + temp, data = HSC_morph_hr, xlab = "Heart Rate Condtion")
+boxplot(hr ~ hr_c + temp, data = HSC_morph_hr, xlab = "Heart Rate Condtion and Temperature(°C)", ylab = "Heart Rate (Beats Per Minute)")
 
 age_temp_mod <- lm(hr ~ hr_c + temp, data = HSC_morph_hr)
 summary(age_temp_mod)
