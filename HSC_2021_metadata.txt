@@ -1,0 +1,118 @@
+﻿1. Title of Dataset: Temperature Tolerance and Physiology of the Horseshoe Crab, Limulus polyphemus
+
+
+2. Author Information
+        A. Principal Investigator Contact Information
+                Name:  Emily Dombrowski
+                Institution: College of Charleston
+                Address: 66 George St
+                Email: dombrowskieg@g.cofc.edu
+
+
+        B. Associate or Co-investigator Contact Information
+                Name: Dr. Jody Beers
+                Institution: College of Charleston
+
+
+
+
+3. Date of data collection: 05/31/2021 to 08/01/2021
+
+
+4. Geographic location of data collection: Charleston, South Carolina
+
+
+5. Information about funding sources that supported the collection of the data: This research was supported by the Fort Johnson REU Program, paid for by the National Science Foundation. DBI-1757899.
+
+
+
+
+DATA & FILE OVERVIEW
+
+
+1. File List: 
+<list all files (or folders, as appropriate for dataset organization) contained in the dataset, with a brief description>
+
+
+2. Relationship between files, if important: 
+
+
+3. Additional related data collected that was not included in the current data package: 
+
+
+4. Are there multiple versions of the dataset? yes/no
+        A. If yes, name of file(s) that was updated: 
+                i. Why was the file updated? 
+                ii. When was the file updated? 
+
+
+
+
+METHODOLOGICAL INFORMATION
+
+
+1. Description of methods used for collection/generation of data: 
+<Include links or references to publications or other documentation containing experimental design or protocols used in data collection>
+
+
+2. Methods for processing the data: 
+<describe how the submitted data were generated from the raw or collected data>
+
+
+3. Instrument- or software-specific information needed to interpret the data: 
+<include full name and version of software, and any necessary packages or libraries needed to run scripts>
+
+
+4. Standards and calibration information, if appropriate: 
+
+
+5. Environmental/experimental conditions: 
+
+
+6. Describe any quality-assurance procedures performed on the data: 
+
+
+7. People involved with sample collection, processing, analysis and/or submission: 
+
+
+
+
+DATA-SPECIFIC INFORMATION FOR: HSC_age_dens
+
+
+1. Number of variables: 8
+
+
+2. Number of cases/rows: 17
+
+
+3. Variable List: 
+id -> horseshoe crab ID as provided by the South Carolina Department of Natural resources for tagging. 
+sex -> listed as M or F to correspond with male or female
+age -> listed as O or Y to correspond with old or young; aging procedure detailed by Sasson, Johnson, and Brockmann (2012)
+temp -> HSC were experimentally acclimated to 20°C and 30°C, which corresponds to 20 and 30
+tank -> HSC were held in 5 tanks throughout the experiment, 1-5 denotes which tank
+hc_280 -> refers to hemocyanin concentration read at 280 nm in mg/mL; procedure adopted from Coates et al. (2011)
+hc_350 -> refers to hemocyanin concentration read at 350 nm in mg/mL; procedure adopted from Coates et al. (2011)
+ameb_d -> refers to amebocyte density in cells/mL; counting and procedure evaluated by Hurton et al. (2005)
+
+
+DATA-SPECIFIC INFORMATION FOR: HSC_morph_hr
+
+
+1. Number of variables: 9
+
+
+2. Number of cases/rows: 51
+
+
+3. Variable List: 
+id -> horseshoe crab ID as provided by the South Carolina Department of Natural resources for tagging. 
+tank -> HSC were held in 5 tanks throughout the experiment, 1-5 denotes which tank
+sex -> listed as M or F to correspond with male or female
+age -> listed as O or Y to correspond with old or young; aging procedure detailed by Sasson, Johnson, and Brockmann (2012)
+temp -> HSC were experimentally acclimated to 20°C and 30°C, which corresponds to 20 and 30
+morph_p -> refers to the percent present of different amebocyte morphologies as observed on hemocytometer; procedure adopted from Coates et al. (2011)
+morph_c -> denotes 3 amebocyte morphologies: Contracted (C), Granular Flattened (GF), and Degranular Flattened (DGF)
+hr -> indicates beats per minute of HSC heart rate as taken by an infrared heart rate monitor 
+hr_c -> indicates heart rate condition: pre, post, and post2. Pre refers to HSC heart rate 5 minutes before blood draw, post refers to HSC heart rate 5 minutes after blood draw, and post2 refers to heart rate from 5-10 minutes after blood draw
