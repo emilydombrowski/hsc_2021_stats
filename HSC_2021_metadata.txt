@@ -7,13 +7,9 @@
                 Institution: College of Charleston
                 Address: 66 George St
                 Email: dombrowskieg@g.cofc.edu
-
-
         B. Associate or Co-investigator Contact Information
                 Name: Dr. Jody Beers
                 Institution: College of Charleston
-
-
 
 
 3. Date of data collection: 05/31/2021 to 08/01/2021
@@ -25,8 +21,6 @@
 5. Information about funding sources that supported the collection of the data: This research was supported by the Fort Johnson REU Program, paid for by the National Science Foundation. DBI-1757899.
 
 
-
-
 DATA & FILE OVERVIEW
 
 
@@ -35,46 +29,13 @@ DATA & FILE OVERVIEW
 
 
 2. Relationship between files, if important: 
+Data folder contains HSC_morph_hr and HSC_ameb_dens. Both files refer to the same set of 17 HSCs, but different study parameters
 
 
-3. Additional related data collected that was not included in the current data package: 
+3. Additional related data collected that was not included in the current data package: NA
 
 
-4. Are there multiple versions of the dataset? yes/no
-        A. If yes, name of file(s) that was updated: 
-                i. Why was the file updated? 
-                ii. When was the file updated? 
-
-
-
-
-METHODOLOGICAL INFORMATION
-
-
-1. Description of methods used for collection/generation of data: 
-<Include links or references to publications or other documentation containing experimental design or protocols used in data collection>
-
-
-2. Methods for processing the data: 
-<describe how the submitted data were generated from the raw or collected data>
-
-
-3. Instrument- or software-specific information needed to interpret the data: 
-<include full name and version of software, and any necessary packages or libraries needed to run scripts>
-
-
-4. Standards and calibration information, if appropriate: 
-
-
-5. Environmental/experimental conditions: 
-
-
-6. Describe any quality-assurance procedures performed on the data: 
-
-
-7. People involved with sample collection, processing, analysis and/or submission: 
-
-
+4. Are there multiple versions of the dataset? No
 
 
 DATA-SPECIFIC INFORMATION FOR: HSC_age_dens
