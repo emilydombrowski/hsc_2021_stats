@@ -13,10 +13,17 @@ library(dplyr)
 ```
 
 ```{r temperature and amebocyte density}
-boxplot(ameb_d~temp, data = HSC_age_dens, xlab = "Temperature (°C)", ylab = 
-          "Amebocyte Density (g/mL)")
+boxplot(ameb_d~temp, data = HSC_age_dens, 
+        main = 'Temperature (°C) vs. Amebocyte Density (g/mL)',
+        xlab = 'Temperature (°C)', 
+        ylab = 'Amebocyte Density (g/mL)',
+        col = c('cadetblue', 'firebrick')
+        )
 # created box plot looking at the effect of temperature on amebocyte density
+# doesn't appear different
+```
 
+```{r}
 ameb_temp_mod <- lm(ameb_d~temp, data = HSC_age_dens)
 summary(ameb_temp_mod)
 anova(ameb_temp_mod)
@@ -60,15 +67,21 @@ power_ameb_dens <- function(n, sig_df= c(0.5, 0.75, 0.9)){
 }
 ```
 
-```{r age and amebocyte density}
+```{r age and amebocyte density box plot}
 boxplot(ameb_d~age, data = HSC_age_dens, 
-        xlab = "HSC Age", ylab = "Amebocyte Density (g/mL)")
+        main = 'Age vs. Amebocyte Density (g/mL)',
+        xlab = "HSC Age", ylab = "Amebocyte Density (g/mL)",
+        col = c('cadetblue', 'firebrick')
+        )
 # box plot to model differences between amebocyte density in old vs young hsc
+# doesn't appear to be any difference
+```
 
+```{r age and amebocyte density lm}
 ameb_age_mod <- lm(ameb_d~age, data = HSC_age_dens)
 summary(ameb_age_mod)
 anova(ameb_age_mod)
-# significance modelling for old vs. young hsd
+# significance modelling for old vs. young hsc
 
 library(dplyr)
 old = filter(HSC_age_dens, age == "O")
@@ -92,12 +105,30 @@ pow_age_dens
 # gives n = 13... number of hscs required for each group
 ```
 
+```{r temperature age and amebocyte density lm}
+ameb_temp_age_mod <- lm(ameb_d~temp + age + temp : age, data = HSC_age_dens)
+summary(ameb_temp_age_mod)
+anova(ameb_temp_age_mod)
+```
+
+
 ```{r temperature and amebocyte morphology}
 boxplot(morph_p ~ morph_c + temp, data = HSC_morph_hr,
-        xlab = "Morphology Condition and Temperature(°C)",
-        ylab = "Percent Morphology (%)")
-# box plots for temperature and amebocyte morphology conditions
+        main = 'Temperature (°C) vs. Percent Morphology (%)',
+        xlab = 'Morphology Condition and Temperature(°C)',
+        ylab = 'Percent Morphology (%)',
+        col = c('springgreen4', 'plum', 'cornflowerblue','springgreen4', 
+                'plum', 'cornflowerblue'))
 
+# legend('topleft', c('C = Contracted', 'GF = Granular Flattened', 
+#                    'DGF = Degranular Flattened'), 
+#       col = c('springgreen4', 'plum', 'cornflowerblue'),
+#       pch = 15, bty = n)
+        
+# box plots for temperature and amebocyte morphology conditions
+```
+
+```{r}
 age_temp_mod <- lm(morph_p ~ morph_c + temp, data = HSC_morph_hr)
 age_temp_mod_int <- update(age_temp_mod, . ~ . + morph_c:temp)
 summary(age_temp_mod)
@@ -160,9 +191,17 @@ pow_dgf_temp <- power.t.test(n= , delta = 0.186, sd = sigma_dgf, power =
 pow_dgf_temp # gives very high output; double check this
 ```
 
-```{r age and amebocyte morphology}
-boxplot(morph_p ~ morph_c + age, data = HSC_morph_hr, ylab = "Percent Morphology")
+```{r age vs. percent morphology boxplot}
+boxplot(morph_p ~ morph_c + age, data = HSC_morph_hr, 
+        main = 'Age vs. Percent Morphology (%)',
+        xlab = 'Morphology Condition and Age',
+        ylab = 'Percent Morphology',
+        col = c('springgreen4', 'plum', 'cornflowerblue','springgreen4', 
+                'plum', 'cornflowerblue')
+        )
+```
 
+```{r age vs. morphology lm}
 age_morph_mod <- lm(morph_p ~ morph_c + age, data = HSC_morph_hr)
 summary(age_morph_mod)
 anova(age_morph_mod)
@@ -227,8 +266,12 @@ pow_dgf_age # gives output 11.8
 
 ```{r age and heart rate}
 boxplot(hr ~ hr_c + age, data = HSC_morph_hr,
-        xlab = "Heart Rate Condition and Age",
-        ylab = "Heart Rate (Beats Per Minute)")
+        main = 'Age vs. Heart Rate (Beats Per Minute)',
+        xlab = 'Heart Rate Condition and Age',
+        ylab = 'Heart Rate (Beats Per Minute)',
+        col = c('springgreen4', 'plum', 'cornflowerblue','springgreen4', 
+                'plum', 'cornflowerblue')
+        )
 
 age_hr_mod <- lm(hr ~ hr_c + age, data = HSC_morph_hr)
 summary(age_hr_mod)
@@ -237,8 +280,12 @@ anova(age_hr_mod)
 
 ```{r temperature and heart rate}
 boxplot(hr ~ hr_c + temp, data = HSC_morph_hr, 
-        xlab = "Heart Rate Condtion and Temperature(°C)", 
-        ylab = "Heart Rate (Beats Per Minute)")
+        main = 'Temperature(°C) vs. Heart Rate (Beats Per Minute)',
+        xlab = 'Heart Rate Condtion and Temperature(°C)', 
+        ylab = 'Heart Rate (Beats Per Minute)',
+        col = c('springgreen4', 'plum', 'cornflowerblue','springgreen4', 
+                'plum', 'cornflowerblue')
+        )
 
 age_temp_mod <- lm(hr ~ hr_c + temp, data = HSC_morph_hr)
 summary(age_temp_mod)
