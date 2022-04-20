@@ -2,6 +2,11 @@
 
 Objective: This project aims to give preliminary data about horseshoe crab (HSC) hemolymph differs based on temperature variation and relative horseshoe crab age and conduct power analyses to see parameters needed for future studies.
 
+Folders
+* data: contains .csv files with relevant data for project
+* scripts: contains .Rmd file used to generate graphs and code
+* figs: contains .html output for project figures
+
 Project repository for data collected about HSC hemolymph physiology. This project was a pilot study conducted over a 10 week period in 2021. The questions this study sought to assess are: 
 * Does temperature affect HSC physiology and hemolymph?
 * Does age affect HSC physiology and hemolymph?
