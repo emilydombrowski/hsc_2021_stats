@@ -1,0 +1,246 @@
+---
+title: "HSC_temp_age_models.Rmd"
+output: html_document
+---
+
+```{r read in data sets}
+# relevant data sets for this document
+HSC_age_dens <- read.csv("./data/HSC_age_dens.csv")
+HSC_morph_hr <- read.csv("./data/HSC_morph_hr.csv")
+
+# libraries used
+library(dplyr)
+```
+
+```{r temperature and amebocyte density}
+boxplot(ameb_d~temp, data = HSC_age_dens, xlab = "Temperature (°C)", ylab = 
+          "Amebocyte Density (g/mL)")
+# created box plot looking at the effect of temperature on amebocyte density
+
+ameb_temp_mod <- lm(ameb_d~temp, data = HSC_age_dens)
+summary(ameb_temp_mod)
+anova(ameb_temp_mod)
+# statistical summary of results
+
+library(dplyr)
+high = filter(HSC_age_dens, temp == "30")
+low = filter(HSC_age_dens, temp == "20")
+mean_high = mean(high$ameb_d)
+mean_low = mean(low$ameb_d)
+# sorting information for power analysis
+
+mean_high - mean_low # delta value
+
+sigma_ameb_d_temp <- sd(HSC_age_dens$ameb_d)
+# sigma value for power analysis
+
+# does ameb density differ between young and old crabs? power analysis to
+# determine how many crabs needed to answer question
+
+pow_temp_dens <- power.t.test(n= , delta = 200069, sd = sigma_ameb_d_temp, 
+                              power =0.5, sig.level =  0.05)
+pow_temp_dens
+# gives n = 25.5... number of hscs required for each group; can run different powers to see different numbers
+
+# use anova power test to specify 2 groups and leave sample size blank
+```
+
+```{r}
+# function/plot to analyze different powers
+sig_df <- c(0.5, 0.75, 0.9) # different powers that i would like to analyze
+# goal: make graph that evaluates number of samples needed at different power levels
+
+power_ameb_dens <- function(n, sig_df= c(0.5, 0.75, 0.9)){
+  hsc_samp_size <- NULL
+  for(i in  seq_along(sig_df)) {
+     hsc_samp_size[i] <- power.t.test(n=n , delta = 200069, sd = sigma_ameb_d_temp, 
+                                  power=0.5, sig.level =  sig_df[i])$n
+  }
+  hsc_samp_size
+}
+```
+
+```{r age and amebocyte density}
+boxplot(ameb_d~age, data = HSC_age_dens, 
+        xlab = "HSC Age", ylab = "Amebocyte Density (g/mL)")
+# box plot to model differences between amebocyte density in old vs young hsc
+
+ameb_age_mod <- lm(ameb_d~age, data = HSC_age_dens)
+summary(ameb_age_mod)
+anova(ameb_age_mod)
+# significance modelling for old vs. young hsd
+
+library(dplyr)
+old = filter(HSC_age_dens, age == "O")
+young = filter(HSC_age_dens, age == "Y")
+mean_old = mean(old$ameb_d)
+mean_young = mean(young$ameb_d)
+# sorting data for power analysis
+
+mean_old - mean_young
+# calculation for determining delta value
+
+sigma_ameb_d <- sd(HSC_age_dens$ameb_d)
+
+
+# does ameb density differ between young and old crabs? power analysis to
+# determine how many crabs needed to answer question
+
+pow_age_dens <- power.t.test(n= , delta = 500000, sd = sigma_ameb_d, power = 
+                               0.5,sig.level =  0.05)
+pow_age_dens
+# gives n = 13... number of hscs required for each group
+```
+
+```{r temperature and amebocyte morphology}
+boxplot(morph_p ~ morph_c + temp, data = HSC_morph_hr,
+        xlab = "Morphology Condition and Temperature(°C)",
+        ylab = "Percent Morphology (%)")
+# box plots for temperature and amebocyte morphology conditions
+
+age_temp_mod <- lm(morph_p ~ morph_c + temp, data = HSC_morph_hr)
+age_temp_mod_int <- update(age_temp_mod, . ~ . + morph_c:temp)
+summary(age_temp_mod)
+anova(age_temp_mod)
+car::Anova(age_temp_mod, type = 3)
+anova(age_temp_mod, age_temp_mod_int)
+# linear models for significance testing 
+
+# Average percent morphology for each condition: temperature and morpholgy
+# subsets information and finds means for power analysis
+
+high_con = filter(HSC_morph_hr, temp == "30", morph_c == "C")
+mean_high_con = mean(high_con$morph_p)
+
+low_con = filter(HSC_morph_hr, temp == "20", morph_c == "C")
+mean_low_con = mean(low_con$morph_p)
+
+high_gf = filter(HSC_morph_hr, temp == "30", morph_c == "GF")
+mean_high_gf = mean(high_gf$morph_p)
+
+low_gf = filter(HSC_morph_hr, temp == "20", morph_c == "GF")
+mean_low_gf = mean(low_gf$morph_p)
+
+high_dgf = filter(HSC_morph_hr, temp == "30", morph_c == "DGF")
+mean_high_dgf = mean(high_dgf$morph_p)
+
+low_dgf = filter(HSC_morph_hr, temp == "20", morph_c == "DGF")
+mean_low_dgf = mean(low_dgf$morph_p)
+
+# power analyses for temperature vs. age morphologies
+
+# power analysis for 20 vs. 30 contracted
+mean_high_con - mean_low_con # delta value
+
+contracted_perc = filter(HSC_morph_hr, morph_c == "C")
+sigma_con <- sd(contracted_perc$morph_p) # sigma value
+
+pow_con_temp <- power.t.test(n= , delta = 3.387, sd = sigma_con, power = 
+                               0.5,sig.level =  0.05)
+pow_con_temp # gives output 7.411
+
+# power analysis for 20 vs. 30 granular flattened
+mean_high_gf - mean_low_gf # delta value
+
+gf_perc = filter(HSC_morph_hr, morph_c == "GF")
+sigma_gf <- sd(gf_perc$morph_p) # sigma value
+
+pow_gf_temp <- power.t.test(n= , delta = 3.575, sd = sigma_gf, power = 
+                               0.5,sig.level =  0.05)
+pow_gf_temp # gives output 37.113
+
+# power analysis for 20 vs. 30 degranular flattened
+mean_high_dgf - mean_low_dgf # delta value
+
+dgf_perc = filter(HSC_morph_hr, morph_c == "DGF")
+sigma_dgf <- sd(gf_perc$morph_p) # sigma value
+
+pow_dgf_temp <- power.t.test(n= , delta = 0.186, sd = sigma_dgf, power = 
+                               0.5,sig.level =  0.05)
+pow_dgf_temp # gives very high output; double check this
+```
+
+```{r age and amebocyte morphology}
+boxplot(morph_p ~ morph_c + age, data = HSC_morph_hr, ylab = "Percent Morphology")
+
+age_morph_mod <- lm(morph_p ~ morph_c + age, data = HSC_morph_hr)
+summary(age_morph_mod)
+anova(age_morph_mod)
+
+library(dplyr)
+
+# age
+old_1 <- filter(HSC_morph_hr, age == "O")
+young_1 <- filter(HSC_morph_hr, age == "Y")
+
+# amebocyte morphology and age subsets and averages for calculating power 
+
+old_con = filter(HSC_morph_hr, age == "O", morph_c == "C")
+mean_old_con = mean(old_con$morph_p)
+
+young_con = filter(HSC_morph_hr, age == "Y", morph_c == "C")
+mean_young_con = mean(young_con$morph_p)
+
+old_gf = filter(HSC_morph_hr, age == "O", morph_c == "GF")
+mean_old_gf = mean(old_gf$morph_p)
+
+young_gf = filter(HSC_morph_hr, age == "Y", morph_c == "GF")
+mean_young_gf = mean(young_gf$morph_p)
+
+old_dgf = filter(HSC_morph_hr, age == "O", morph_c == "DGF")
+mean_old_dgf = mean(old_dgf$morph_p)
+
+young_dgf = filter(HSC_morph_hr, age == "Y", morph_c == "DGF")
+mean_young_dgf = mean(young_dgf$morph_p)
+
+# power analysis to test old vs. young contracted
+
+mean_old_con - mean_young_con # delta value
+
+contracted_perc = filter(HSC_morph_hr, morph_c == "C")
+sigma_con <- sd(contracted_perc$morph_p) # sigma value
+
+pow_con_age <- power.t.test(n= , delta = 0.768, sd = sigma_con, power = 
+                               0.5,sig.level =  0.05)
+pow_con_age # gives output 124
+
+# power analysis to test old vs. young granular flattened
+mean_old_gf - mean_young_gf # delta value
+
+gf_perc = filter(HSC_morph_hr, morph_c == "GF")
+sigma_gf <- sd(gf_perc$morph_p) # sigma value
+
+pow_gf_age <- power.t.test(n= , delta = 6.147, sd = sigma_gf, power = 
+                               0.5,sig.level =  0.05)
+pow_gf_age # gives output 13.24
+
+# power analysis to test old vs. young degranular flattened
+mean_old_dgf - mean_young_dgf # delta value
+
+dgf_perc = filter(HSC_morph_hr, morph_c == "DGF")
+sigma_dgf <- sd(dgf_perc$morph_p) # sigma value
+
+pow_dgf_age <- power.t.test(n= , delta = 6.914, sd = sigma_dgf, power = 
+                               0.5,sig.level =  0.05)
+pow_dgf_age # gives output 11.8
+```
+
+```{r age and heart rate}
+boxplot(hr ~ hr_c + age, data = HSC_morph_hr,
+        xlab = "Heart Rate Condition and Age",
+        ylab = "Heart Rate (Beats Per Minute)")
+
+age_hr_mod <- lm(hr ~ hr_c + age, data = HSC_morph_hr)
+summary(age_hr_mod)
+anova(age_hr_mod)
+```
+
+```{r temperature and heart rate}
+boxplot(hr ~ hr_c + temp, data = HSC_morph_hr, 
+        xlab = "Heart Rate Condtion and Temperature(°C)", 
+        ylab = "Heart Rate (Beats Per Minute)")
+
+age_temp_mod <- lm(hr ~ hr_c + temp, data = HSC_morph_hr)
+summary(age_temp_mod)
+anova(age_temp_mod)
+```
