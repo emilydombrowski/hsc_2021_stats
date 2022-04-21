@@ -109,11 +109,18 @@ sigma_ameb_d <- sd(HSC_age_dens$ameb_d)
 # does ameb density differ between young and old crabs? power analysis to
 # determine how many crabs needed to answer question
 
-pow_age_dens <- power.t.test(n= , delta = 500000, sd = sigma_ameb_d, power = 
-                               0.5,sig.level =  0.05)
-pow_age_dens
+pow_age_dens_n <- power.t.test(n= , delta = 500000, sd = sigma_ameb_d, 
+                               power = 0.5,sig.level =  0.05)
+pow_age_dens_n
 # gives n = 13... number of hscs required for each group
+
+pow_age_dens_p <- power.t.test(n = 6, delta = 500000, 
+                                 sd = sigma_ameb_d, power = ,
+                                 sig.level =  0.05)
+pow_age_dens_p
+# gives 0.24 power...not very good
 ```
+
 
 ```{r temperature and amebocyte morphology box plot}
 boxplot(morph_p ~ morph_c + temp, data = HSC_morph_hr,
